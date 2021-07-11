@@ -440,6 +440,7 @@ set +o errexit
 # shellcheck disable=SC2086
 java -jar "$VERIFIER_JAR_LOCATION" check-plugin $PLUGIN_LOCATION $IDE_DIRECTORIES 2>&1 | tee "$VERIFICATION_OUTPUT_LOG"
 VERIFICATION_SUCCESSFUL=$?
+echo "Check Pluign status: $VERIFICATION_SUCCESSFUL"
 
 # Restore 'exit on error', as the test is over.
 set -o errexit
@@ -512,7 +513,7 @@ elif isFailureLevelSet "$VERIFICATION_OUTPUT_LOG" "INVALID_PLUGIN" "The followin
 elif isFailureLevelSet "$VERIFICATION_OUTPUT_LOG" "NOT_DYNAMIC" "Plugin cannot be loaded/unloaded without IDE restart"; then
   error_wall
 
-elif [ ${VERIFICATION_SUCCESSFUL} == 1 ]; then
+elif [ ${VERIFICATION_SUCCESSFUL} != 0 ]; then
   # We end the block here, as only `isFailureLevelSet` sets the endgroup for us.
   echo "::endgroup::" # END "Running validations against output..." block.
 
